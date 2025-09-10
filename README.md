@@ -42,8 +42,8 @@ sudo apt install python3-venv -y
 ```
 6. Git clone Bot & Go to folder bot:
 ```
-git clone https://github.com/danixyz/autotx-monad.git
-cd autotx-monad
+git clone https://github.com/dani12po/autoTX.git
+cd autoTX
 ```
 7. Go to folder bot & Edit file `.env` paste your Private Key after `PRIVATE_KEY=`
 ```
