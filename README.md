@@ -2,9 +2,7 @@
 
 # JOIN COMMUNITY :
 
-TELEGRAM CHANNEL : [DANI XYZ](https://t.me/DANIXYZ_COM)
-
-YOUTUBE CHANNEL : [DANI XYZ](https://www.youtube.com/@DANIXYZ_COM)
+TELEGRAM CHANNEL : [DANI XYZ](https://t.me/YaapGitHUB)
 
 ## TUTORIAL :
 
@@ -63,7 +61,7 @@ pip install -r requirements.txt
 ```
 python3 bot.py
 ```
-10. Done. Don't Forget to subscribe my channel Youtube & Telegram
+10. Done. Don't Forget to subscribe my channel Telegram
 
 
 
