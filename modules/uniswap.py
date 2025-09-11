@@ -1,8 +1,13 @@
-#!/usr/bin/env python3
+#!/data/data/com.termux/files/usr/bin/python3
 import os
 import time
 import random
 from dotenv import load_dotenv
+
+# Ensure paths work in Termux
+HOME = os.getenv('HOME', '/data/data/com.termux/files/home')
+SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
+PROJECT_ROOT = os.path.dirname(SCRIPT_DIR)
 from web3 import Web3
 from colorama import init, Fore, Style
 

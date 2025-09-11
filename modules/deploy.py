@@ -1,6 +1,18 @@
-#!/usr/bin/env python3
-import os, sys, time, random, json, shutil, tempfile, subprocess
+#!/data/data/com.termux/files/usr/bin/python3
+import os
+import sys
+import time
+import random
+import json
+import subprocess
+import shutil
+import tempfile
 from dotenv import load_dotenv
+
+# Ensure paths work in Termux
+HOME = os.getenv('HOME', '/data/data/com.termux/files/home')
+SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
+PROJECT_ROOT = os.path.dirname(SCRIPT_DIR)
 from web3 import Web3
 from colorama import init, Fore, Style
 

@@ -1,8 +1,15 @@
-#!/usr/bin/env python3
+#!/data/data/com.termux/files/usr/bin/python3
 import os
 import sys
 import asyncio
 from asyncio.subprocess import PIPE
+
+# Ensure paths work in Termux
+HOME = os.getenv('HOME', '/data/data/com.termux/files/home')
+SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
+
+# Make sure we can find the modules directory
+sys.path.append(SCRIPT_DIR)
 
 # Optional third-party module 'danixyz' — use if available, otherwise provide a no-op.
 try:
