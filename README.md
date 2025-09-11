@@ -53,73 +53,70 @@ Sebelum menjalankan bot, pastikan wallet Anda siap:
 
 * `sudo` hanya diperlukan di Linux jika Anda menginstall paket secara global.
 * Jika menggunakan **virtual environment**, Anda **tidak perlu sudo** karena semua paket akan terinstall di folder `venv` lokal proyek.
-* Contoh penggunaan Linux global (opsional, jika tidak pakai venv):
-
-  ```bash
-  sudo apt install git -y
-  sudo apt install python3 -y
-  sudo apt install python3-pip -y
-  sudo apt install python3-venv -y
-  ```
-* Windows **tidak menggunakan sudo** sama sekali.
+* Windows dan Termux **tidak menggunakan sudo** sama sekali.
 
 ---
 
-## 🚀 TUTORIAL INSTALASI LENGKAP
+## 🚀 TUTORIAL INSTALASI PER PLATFORM
 
-### 1️⃣ Install Git
-
-**Linux (opsional jika pakai global):**
+### 1️⃣ Termux (Android)
 
 ```bash
-sudo apt update
-sudo apt install git -y
+pkg update && pkg upgrade -y
+pkg install python git -y
+pkg install python-pip -y
+pkg install nano -y
 ```
 
-**Windows:**
-Download dan install Git dari [git-scm.com](https://git-scm.com/).
-
----
-
-### 2️⃣ Install Python 3 dan pip
-
-**Linux (opsional jika pakai global):**
-
-```bash
-sudo apt install python3 -y
-sudo apt install python3-pip -y
-sudo apt install python3-venv -y
-```
-
-**Windows:**
-Download Python 3 dari [python.org](https://www.python.org/downloads/) dan centang opsi **Add Python to PATH** saat install.
-
----
-
-### 3️⃣ Clone Repository
+* Clone repository:
 
 ```bash
 git clone https://github.com/dani12po/autoTX.git
 cd autoTX
 ```
 
----
-
-### 4️⃣ Buat File `.env`
-
-Buat file `.env` di folder `autoTX` dan tambahkan Private Key Anda:
+* Buat file `.env` dan tambahkan Private Key:
 
 ```
 PRIVATE_KEY=0xYourPrivateKeyHere
 ```
 
-> \[!] Jangan commit `.env` ke GitHub atau bagikan ke orang lain.
+* Buat virtual environment dan install dependencies:
 
----
+```bash
+python -m venv venv
+source venv/bin/activate
+pip install web3 python-dotenv colorama
+```
 
-### 5️⃣ Buat Virtual Environment & Install Dependencies
+* Jalankan bot:
 
-**Linux / Mac:**
+```bash
+python bot.py
+```
+
+### 2️⃣ Linux
+
+```bash
+# Install Git dan Python3 (opsional jika pakai global)
+sudo apt update
+sudo apt install git python3 python3-pip python3-venv -y
+```
+
+* Clone repository:
+
+```bash
+git clone https://github.com/dani12po/autoTX.git
+cd autoTX
+```
+
+* Buat file `.env` dan tambahkan Private Key:
+
+```
+PRIVATE_KEY=0xYourPrivateKeyHere
+```
+
+* Buat virtual environment dan install dependencies:
 
 ```bash
 python3 -m venv venv
@@ -127,7 +124,30 @@ source venv/bin/activate
 pip install web3 python-dotenv colorama
 ```
 
-**Windows:**
+* Jalankan bot:
+
+```bash
+python3 bot.py
+```
+
+### 3️⃣ Windows
+
+* Install Git dari [git-scm.com](https://git-scm.com/)
+* Install Python dari [python.org](https://www.python.org/downloads/) (centang **Add Python to PATH**)
+* Clone repository:
+
+```cmd
+git clone https://github.com/dani12po/autoTX.git
+cd autoTX
+```
+
+* Buat file `.env` dan tambahkan Private Key:
+
+```
+PRIVATE_KEY=0xYourPrivateKeyHere
+```
+
+* Buat virtual environment dan install dependencies:
 
 ```cmd
 python -m venv venv
@@ -135,25 +155,11 @@ venv\Scripts\activate
 pip install web3 python-dotenv colorama
 ```
 
-> Virtual environment mencegah konflik paket Python dengan sistem global dan **tidak memerlukan sudo**.
-
----
-
-### 6️⃣ Jalankan Bot
-
-**Linux / Mac:**
-
-```bash
-python3 bot.py
-```
-
-**Windows:**
+* Jalankan bot:
 
 ```cmd
 python bot.py
 ```
-
-Bot akan mulai otomatis melakukan transaksi sesuai konfigurasi.
 
 ---
 
