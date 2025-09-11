@@ -2,7 +2,11 @@
 import os
 import sys
 import asyncio
+import subprocess
 from asyncio.subprocess import PIPE
+
+# Set TMPDIR for Termux compatibility
+os.environ['TMPDIR'] = '/data/data/com.termux/files/usr/tmp'
 
 # Ensure paths work in Termux
 HOME = os.getenv('HOME', '/data/data/com.termux/files/home')
@@ -10,6 +14,10 @@ SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 
 # Make sure we can find the modules directory
 sys.path.append(SCRIPT_DIR)
+
+# Disable functionalities that might cause issues in Termux
+if 'ANDROID_DATA' in os.environ:
+    asyncio.set_event_loop_policy(asyncio.DefaultEventLoopPolicy())
 
 # Optional third-party module 'danixyz' — use if available, otherwise provide a no-op.
 try:
@@ -89,18 +97,42 @@ for filename in module_files:
     scripts.append({ "name": name, "path": path })
 
 async def run_script(script):
-    print(Fore.YELLOW + f"\n📜 Menjalankan: {script['name']}...")
+    print(Fore.YELLOW + f"\n=== Menjalankan: {script['name']}...")
     cmd = [sys.executable, script["path"]]
 
-    spinner = Halo(text='Sedang mengeksekusi...', spinner='dots', color='cyan')
-    spinner.start()
-    proc = await asyncio.create_subprocess_exec(
-        *cmd,
-        stdout=PIPE,
-        stderr=PIPE
-    )
-    stdout, stderr = await proc.communicate()
-    spinner.stop()
+    try:
+        # Use regular subprocess for Termux compatibility
+        if 'ANDROID_DATA' in os.environ:
+            process = subprocess.Popen(
+                cmd,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
+                text=True
+            )
+            stdout, stderr = process.communicate()
+            return_code = process.returncode
+        else:
+            # Use asyncio for non-Termux environments
+            spinner = Halo(text='Sedang mengeksekusi...', spinner='dots', color='cyan')
+            spinner.start()
+            proc = await asyncio.create_subprocess_exec(
+                *cmd,
+                stdout=PIPE,
+                stderr=PIPE
+            )
+            stdout, stderr = await proc.communicate()
+            return_code = proc.returncode
+            spinner.stop()
+
+        # Convert bytes to string if needed
+        if isinstance(stdout, bytes):
+            stdout = stdout.decode()
+        if isinstance(stderr, bytes):
+            stderr = stderr.decode()
+
+    except Exception as e:
+        print(Fore.RED + f"Error running script: {str(e)}")
+        return
 
     if stdout:
         print(Fore.WHITE + stdout.decode())
