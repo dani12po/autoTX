@@ -49,11 +49,27 @@ Sebelum menjalankan bot, pastikan wallet Anda siap:
 
 ---
 
+## 💡 CATATAN TENTANG `sudo`
+
+* `sudo` hanya diperlukan di Linux jika Anda menginstall paket secara global.
+* Jika menggunakan **virtual environment**, Anda **tidak perlu sudo** karena semua paket akan terinstall di folder `venv` lokal proyek.
+* Contoh penggunaan Linux global (opsional, jika tidak pakai venv):
+
+  ```bash
+  sudo apt install git -y
+  sudo apt install python3 -y
+  sudo apt install python3-pip -y
+  sudo apt install python3-venv -y
+  ```
+* Windows **tidak menggunakan sudo** sama sekali.
+
+---
+
 ## 🚀 TUTORIAL INSTALASI LENGKAP
 
 ### 1️⃣ Install Git
 
-**Linux:**
+**Linux (opsional jika pakai global):**
 
 ```bash
 sudo apt update
@@ -67,7 +83,7 @@ Download dan install Git dari [git-scm.com](https://git-scm.com/).
 
 ### 2️⃣ Install Python 3 dan pip
 
-**Linux:**
+**Linux (opsional jika pakai global):**
 
 ```bash
 sudo apt install python3 -y
@@ -119,7 +135,7 @@ venv\Scripts\activate
 pip install web3 python-dotenv colorama
 ```
 
-> Virtual environment mencegah konflik paket Python dengan sistem global.
+> Virtual environment mencegah konflik paket Python dengan sistem global dan **tidak memerlukan sudo**.
 
 ---
 
