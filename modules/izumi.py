@@ -54,8 +54,8 @@ def get_random_delay():
 
 def wrap_mon(amount):
     try:
-        print(Fore.BLUE + "🪫 Starting Izumi ⏩⏩⏩⏩")
-        print(Fore.MAGENTA + f"🔄 Wrap {w3.from_wei(amount, 'ether')} MON > WMON")
+        print(Fore.BLUE + ">>> Starting Izumi >>>>")
+        print(Fore.MAGENTA + f">>> Wrap {w3.from_wei(amount, 'ether')} MON > WMON")
         nonce = w3.eth.get_transaction_count(account.address)
         tx = contract.functions.deposit().build_transaction({
             'from': account.address,
@@ -66,15 +66,15 @@ def wrap_mon(amount):
         })
         signed_tx = account.sign_transaction(tx)
         tx_hash = w3.eth.send_raw_transaction(signed_tx.raw_transaction)
-        print(Fore.GREEN + "✅ Wrap MON > WMON successful")
-        print(Fore.LIGHTBLACK_EX + f"➡️  Hash: {EXPLORER_URL}/{tx_hash.hex()}")
+        print(Fore.GREEN + "+++ Wrap MON > WMON successful")
+        print(Fore.LIGHTBLACK_EX + f">>> Hash: {EXPLORER_URL}/{tx_hash.hex()}")
         w3.eth.wait_for_transaction_receipt(tx_hash)
     except Exception as e:
-        print(Fore.RED + f"❌ Error wrapping MON: {str(e)}")
+        print(Fore.RED + f"xxx Error wrapping MON: {str(e)}")
 
 def unwrap_mon(amount):
     try:
-        print(Fore.MAGENTA + f"🔄 Unwrap {w3.from_wei(amount, 'ether')} WMON > MON")
+        print(Fore.MAGENTA + f">>> Unwrap {w3.from_wei(amount, 'ether')} WMON > MON")
         nonce = w3.eth.get_transaction_count(account.address)
         tx = contract.functions.withdraw(amount).build_transaction({
             'from': account.address,
@@ -84,11 +84,11 @@ def unwrap_mon(amount):
         })
         signed_tx = account.sign_transaction(tx)
         tx_hash = w3.eth.send_raw_transaction(signed_tx.raw_transaction)
-        print(Fore.GREEN + "✅ Unwrap WMON > MON successful")
-        print(Fore.LIGHTBLACK_EX + f"➡️  Hash: {EXPLORER_URL}/{tx_hash.hex()}")
+        print(Fore.GREEN + "+++ Unwrap WMON > MON successful")
+        print(Fore.LIGHTBLACK_EX + f">>> Hash: {EXPLORER_URL}/{tx_hash.hex()}")
         w3.eth.wait_for_transaction_receipt(tx_hash)
     except Exception as e:
-        print(Fore.RED + f"❌ Error Unwrap: {str(e)}")
+        print(Fore.RED + f"xxx Error Unwrap: {str(e)}")
 
 def run_swap_cycle(cycles=1):
     try:
@@ -99,14 +99,14 @@ def run_swap_cycle(cycles=1):
             unwrap_mon(random_amount)
             if i < cycles - 1:
                 wait_minutes = random_delay / 1000 / 60
-                print(Fore.LIGHTBLACK_EX + f"⏳ Wait {wait_minutes} minutes")
+                print(Fore.LIGHTBLACK_EX + f"... Wait {wait_minutes} minutes")
                 time.sleep(random_delay / 1000)
-        print(Fore.GREEN + "✅ Finished Izumi Swap")
+        print(Fore.GREEN + "+++ Finished Izumi Swap")
     except Exception as e:
-        print(Fore.RED + f"❌ Error in runSwapCycle: {str(e)}")
+        print(Fore.RED + f"xxx Error in runSwapCycle: {str(e)}")
 
 if __name__ == '__main__':
     try:
         run_swap_cycle(1)
     except Exception as e:
-        print(Fore.RED + f"❌ Error SwapCycle: {str(e)}")
+        print(Fore.RED + f"xxx Error SwapCycle: {str(e)}")

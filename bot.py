@@ -16,7 +16,19 @@ except (ModuleNotFoundError, ImportError, AttributeError, Exception):
         # Fallback: module not available or invalid, skip initialization.
         print("⚠️ 'danixyz' module not found or invalid, skipping initialization.")
 from subprocess import CalledProcessError
-from colorama import init, Fore, Style
+try:
+    from colorama import init, Fore, Style
+except Exception:
+    # Fallback if colorama is not available — provide no-op replacements so prints still work.
+    def init(*args, **kwargs):
+        pass
+
+    class _NoColors:
+        def __getattr__(self, name):
+            return ""
+
+    Fore = _NoColors()
+    Style = _NoColors()
 from dotenv import load_dotenv
 import pyfiglet  # Untuk tampilan ASCII art
 from halo import Halo  # Untuk animasi loading

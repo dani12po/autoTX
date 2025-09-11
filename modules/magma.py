@@ -22,7 +22,7 @@ EXPLORER_URL = "https://testnet.monadexplorer.com/tx/"
 w3 = Web3(Web3.HTTPProvider(RPC_URL))
 PRIVATE_KEY = os.getenv("PRIVATE_KEY")
 if not PRIVATE_KEY:
-    print(Fore.RED + "❌ Private key tidak ditemukan di .env")
+    print(Fore.RED + "xxx Private key tidak ditemukan di .env")
     sys.exit(1)
 account = w3.eth.account.from_key(PRIVATE_KEY)
 
@@ -43,9 +43,9 @@ def delay(ms):
 def stakeMON():
     try:
         stakeAmount = getRandomAmount()
-        print(Fore.BLUE + "🪫  Starting Magma ⏩⏩⏩⏩")
+        print(Fore.BLUE + ">>> Starting Magma >>>>")
         print(" ")
-        print(Fore.MAGENTA + f"🔄 Magma stake: {w3.from_wei(stakeAmount, 'ether')} MON")
+        print(Fore.MAGENTA + f">>> Magma stake: {w3.from_wei(stakeAmount, 'ether')} MON")
         tx = {
             'to': contractAddress,
             'data': "0xd5575982",
@@ -54,13 +54,13 @@ def stakeMON():
             'nonce': w3.eth.get_transaction_count(account.address),
             'gasPrice': w3.eth.gas_price
         }
-        print(Fore.GREEN + "🔄 STAKE")
+        print(Fore.GREEN + ">>> STAKE")
         signed_tx = account.sign_transaction(tx)
         tx_hash = w3.eth.send_raw_transaction(signed_tx.raw_transaction)
-        print(Fore.YELLOW + f"➡️  Hash: {tx_hash.hex()}")
-        print(Fore.GREEN + "🔄 Wait Confirmation")
+        print(Fore.YELLOW + f">>> Hash: {tx_hash.hex()}")
+        print(Fore.GREEN + ">>> Wait Confirmation")
         w3.eth.wait_for_transaction_receipt(tx_hash)
-        print(Fore.GREEN + "✅ Stake DONE")
+        print(Fore.GREEN + "+++ Stake DONE")
         return stakeAmount
     except Exception as error:
         print(Fore.RED + f"❌ Staking failed: {error}")
@@ -68,7 +68,7 @@ def stakeMON():
 
 def unstakeGMON(amountToUnstake):
     try:
-        print(Fore.GREEN + f"🔄 Unstake: {w3.from_wei(amountToUnstake, 'ether')} gMON")
+        print(Fore.GREEN + f">>> Unstake: {w3.from_wei(amountToUnstake, 'ether')} gMON")
         functionSelector = "0x6fed1ea7"
         paddedAmount = amountToUnstake.to_bytes(32, byteorder='big').hex()
         data = functionSelector + paddedAmount
@@ -79,13 +79,13 @@ def unstakeGMON(amountToUnstake):
             'nonce': w3.eth.get_transaction_count(account.address),
             'gasPrice': w3.eth.gas_price
         }
-        print(Fore.RED + "🔄 Unstake")
+        print(Fore.RED + ">>> Unstake")
         signed_tx = account.sign_transaction(tx)
         tx_hash = w3.eth.send_raw_transaction(signed_tx.raw_transaction)
-        print(Fore.YELLOW + f"➡️ Hash: {tx_hash.hex()}")
-        print(Fore.GREEN + "🔄 Wait Confirmation")
+        print(Fore.YELLOW + f">>> Hash: {tx_hash.hex()}")
+        print(Fore.GREEN + ">>> Wait Confirmation")
         w3.eth.wait_for_transaction_receipt(tx_hash)
-        print(Fore.GREEN + "✅ Unstake DONE")
+        print(Fore.GREEN + "+++ Unstake DONE")
     except Exception as error:
         print(Fore.RED + f"❌ Unstaking failed: {error}")
         raise error
@@ -93,11 +93,11 @@ def unstakeGMON(amountToUnstake):
 def runAutoCycle():
     try:
         stakeAmount = stakeMON()
-        print(Fore.YELLOW + "🔄 wait")
+        print(Fore.YELLOW + ">>> wait")
         delay(73383)
         unstakeGMON(stakeAmount)
     except Exception as error:
-        print(Fore.RED + f"❌ Failed: {error}")
+        print(Fore.RED + f"xxx Failed: {error}")
 
 if __name__ == '__main__':
     runAutoCycle()

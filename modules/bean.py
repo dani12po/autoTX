@@ -45,48 +45,43 @@ TOKEN_ADDRESSES = {
     "JAI": JAI_CONTRACT
 }
 
-# URL untuk mengunduh ABI
-ABI_URL = "https://raw.githubusercontent.com/danixyz/autotx-monad/refs/heads/main/abi/BEAN.js"
+# Path ke file ABI lokal
+ABI_PATH = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'abi', 'BEAN.js')
 
-def fetch_abi(url):
+def load_abi():
     try:
-        print(Fore.YELLOW + f"🔄 Mengunduh ABI dari {url}...")
-        response = requests.get(url)
-        response.raise_for_status()
-
-        abi_content = response.text.strip()
-        print("📜 Isi ABI yang diterima:", abi_content[:100])  # Debug isi ABI
-
+        print(Fore.YELLOW + f">>> Membaca ABI dari {ABI_PATH}...")
+        with open(ABI_PATH, 'r') as f:
+            content = f.read()
+            
         # Ekstrak hanya bagian JSON dari BEAN.js
-        abi_match = re.search(r'const\s+ABI\s*=\s*(\[.*\]);?', abi_content, re.DOTALL)
+        abi_match = re.search(r'const\s+ABI\s*=\s*(\[.*\]);?', content, re.DOTALL)
         if not abi_match:
             raise ValueError("Format ABI tidak valid!")
 
         abi_json_str = abi_match.group(1)
-
-        # Parsing JSON
         abi_json = json.loads(abi_json_str)
         
-        print(Fore.GREEN + "✅ ABI berhasil diunduh dan diproses!\n")
+        print(Fore.GREEN + "+++ ABI berhasil dimuat!\n")
         return abi_json
     except json.JSONDecodeError:
-        raise Exception(Fore.RED + "❌ Gagal mengunduh ABI: Format JSON tidak valid!")
+        raise Exception(Fore.RED + "xxx Gagal memuat ABI: Format JSON tidak valid!")
     except Exception as e:
-        raise Exception(Fore.RED + f"❌ Gagal mengunduh ABI: {str(e)}")
+        raise Exception(Fore.RED + f"xxx Gagal memuat ABI: {str(e)}")
 
 # Muat ABI secara global
-ABI = fetch_abi(ABI_URL)
+ABI = load_abi()
 
 def connect_to_rpc():
     for url in RPC_URLS:
         try:
             w3_instance = Web3(Web3.HTTPProvider(url))
             _ = w3_instance.eth.chain_id
-            print(Fore.BLUE + f"🪫  Connected to BeanSwap RPC: {url}\n")
+            print(Fore.BLUE + f">>> Connected to BeanSwap RPC: {url}\n")
             return w3_instance
         except Exception as e:
             print(Fore.RED + f"Failed to connect to {url}, trying another...")
-    raise Exception(Fore.RED + "❌ Unable to connect")
+    raise Exception(Fore.RED + "xxx Unable to connect")
 
 def sleep(seconds):
     time.sleep(seconds)
@@ -101,7 +96,7 @@ def swap_eth_for_tokens(w3_instance, account, token_address, amount_in_wei, toke
         abi=ABI
     )
     try:
-        print(Fore.GREEN + f"🔄 Swap {w3_instance.from_wei(amount_in_wei, 'ether')} MON > {token_symbol}")
+        print(Fore.GREEN + f">>> Swap {w3_instance.from_wei(amount_in_wei, 'ether')} MON > {token_symbol}")
         nonce = w3_instance.eth.get_transaction_count(account.address, "pending")
         deadline = int(time.time()) + 600
         tx = router.functions.swapExactETHForTokens(
@@ -119,9 +114,9 @@ def swap_eth_for_tokens(w3_instance, account, token_address, amount_in_wei, toke
         })
         signed_tx = account.sign_transaction(tx)
         tx_hash = w3_instance.eth.send_raw_transaction(signed_tx.raw_transaction)
-        print(Fore.YELLOW + f"➡️  Hash: {tx_hash.hex()}")
+        print(Fore.YELLOW + f">>> Hash: {tx_hash.hex()}")
     except Exception as e:
-        print(Fore.RED + f"❌ Failed swap: {str(e)}")
+        print(Fore.RED + f"xxx Failed swap: {str(e)}")
 
 def swap_tokens_for_eth(w3_instance, account, token_address, token_symbol):
     erc20_abi = [
@@ -146,14 +141,14 @@ def swap_tokens_for_eth(w3_instance, account, token_address, token_symbol):
     )
     balance = token_contract.functions.balanceOf(account.address).call()
     if balance == 0:
-        print(Fore.BLACK + f"❌ No balance {token_symbol}, skip")
+        print(Fore.BLACK + f"--- No balance {token_symbol}, skip")
         return
     router = w3_instance.eth.contract(
         address=Web3.to_checksum_address(ROUTER_CONTRACT),
         abi=ABI
     )
     try:
-        print(Fore.GREEN + f"🔄 Swap {token_symbol} > MON")
+        print(Fore.GREEN + f">>> Swap {token_symbol} > MON")
         nonce = w3_instance.eth.get_transaction_count(account.address, "pending")
         approve_tx = token_contract.functions.approve(
             Web3.to_checksum_address(ROUTER_CONTRACT),
@@ -184,16 +179,16 @@ def swap_tokens_for_eth(w3_instance, account, token_address, token_symbol):
         })
         signed_tx = account.sign_transaction(tx)
         tx_hash = w3_instance.eth.send_raw_transaction(signed_tx.raw_transaction)
-        print(Fore.YELLOW + f"➡️  Hash: {tx_hash.hex()}")
+        print(Fore.YELLOW + f">>> Hash: {tx_hash.hex()}")
         delay_time = random.uniform(1, 3)
-        print(Fore.LIGHTBLACK_EX + f"⏳ Wait {delay_time:.2f} seconds")
+        print(Fore.LIGHTBLACK_EX + f"... Wait {delay_time:.2f} seconds")
         sleep(delay_time)
     except Exception as e:
-        print(Fore.RED + f"❌ Failed: {str(e)}")
+        print(Fore.RED + f"xxx Failed: {str(e)}")
 
 def get_balance(w3_instance, account):
     mon_balance = w3_instance.eth.get_balance(account.address)
-    print(Fore.GREEN + f"🧧 MON    : {w3_instance.from_wei(mon_balance, 'ether')} MON")
+    print(Fore.GREEN + f">>> MON    : {w3_instance.from_wei(mon_balance, 'ether')} MON")
     erc20_abi = [
         {
             "constant": True,
@@ -208,21 +203,21 @@ def get_balance(w3_instance, account):
         abi=erc20_abi
     )
     weth_balance = weth_contract.functions.balanceOf(account.address).call()
-    print(Fore.GREEN + f"🧧 WETH   : {w3_instance.from_wei(weth_balance, 'ether')} WETH")
+    print(Fore.GREEN + f">>> WMON   : {w3_instance.from_wei(weth_balance, 'ether')} WMON")
     print(" ")
 
 def main():
     w3_instance = connect_to_rpc()
     account = Account.from_key(PRIVATE_KEY)
-    print(Fore.GREEN + f"🧧 Account: {account.address}\n")
+    print(Fore.GREEN + f">>> Account: {account.address}\n")
     get_balance(w3_instance, account)
     for token_symbol, token_address in TOKEN_ADDRESSES.items():
         eth_amount = get_random_eth_amount(w3_instance)
         swap_eth_for_tokens(w3_instance, account, token_address, eth_amount, token_symbol)
         delay_time = random.uniform(1, 3)
-        print(Fore.LIGHTBLACK_EX + f"⏳ Wait {delay_time:.2f} seconds")
+        print(Fore.LIGHTBLACK_EX + f"... Wait {delay_time:.2f} seconds")
         sleep(delay_time)
-    print("\n" + Fore.WHITE + "🧿 All Token Swaps Completed\n")
+    print("\n" + Fore.WHITE + ">>> All Token Swaps Completed\n")
     for token_symbol, token_address in TOKEN_ADDRESSES.items():
         swap_tokens_for_eth(w3_instance, account, token_address, token_symbol)
 

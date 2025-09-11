@@ -21,7 +21,7 @@ RPC_URL = "https://testnet-rpc.monad.xyz/"
 EXPLORER_URL = "https://testnet.monadexplorer.com/tx/"
 PRIVATE_KEY = os.getenv("PRIVATE_KEY")
 if not PRIVATE_KEY:
-    print(Fore.RED + "❌ Private key tidak ditemukan!")
+    print(Fore.RED + "xxx Private key tidak ditemukan!")
     sys.exit(1)
 w3 = Web3(Web3.HTTPProvider(RPC_URL))
 account = w3.eth.account.from_key(PRIVATE_KEY)
@@ -63,7 +63,7 @@ def getRandomDelay():
 def wrapMON(amount):
     try:
         print(" ")
-        print(Fore.MAGENTA + f"🔄 Wrap {w3.from_wei(amount, 'ether')} MON > WMON")
+        print(Fore.MAGENTA + f">>> Wrap {w3.from_wei(amount, 'ether')} MON > WMON")
         tx = contract.functions.deposit().build_transaction({
             'from': account.address,
             'value': amount,
@@ -72,15 +72,15 @@ def wrapMON(amount):
         })
         signed_tx = account.sign_transaction(tx)
         tx_hash = w3.eth.send_raw_transaction(signed_tx.raw_transaction)
-        print(Fore.GREEN + "✅ Wrap MON > WMON successful")
-        print(Fore.YELLOW + f"➡️  Hash: {tx_hash.hex()}")
+        print(Fore.GREEN + "+++ Wrap MON > WMON successful")
+        print(Fore.YELLOW + f">>> Hash: {tx_hash.hex()}")
         w3.eth.wait_for_transaction_receipt(tx_hash)
     except Exception as error:
-        print(Fore.RED + f"❌ Error wrap MON: {error}")
+        print(Fore.RED + f"xxx Error wrap MON: {error}")
 
 def unwrapMON(amount):
     try:
-        print(Fore.MAGENTA + f"🔄 Unwrap {w3.from_wei(amount, 'ether')} WMON > MON")
+        print(Fore.MAGENTA + f">>> Unwrap {w3.from_wei(amount, 'ether')} WMON > MON")
         tx = contract.functions.withdraw(amount).build_transaction({
             'from': account.address,
             'gas': 500000,
@@ -88,11 +88,11 @@ def unwrapMON(amount):
         })
         signed_tx = account.sign_transaction(tx)
         tx_hash = w3.eth.send_raw_transaction(signed_tx.raw_transaction)
-        print(Fore.GREEN + "✅ Unwrap WMON > MON successful")
-        print(Fore.YELLOW + f"➡️  Hash: {tx_hash.hex()}")
+        print(Fore.GREEN + "+++ Unwrap WMON > MON successful")
+        print(Fore.YELLOW + f">>> Hash: {tx_hash.hex()}")
         w3.eth.wait_for_transaction_receipt(tx_hash)
     except Exception as error:
-        print(Fore.RED + f"❌ Error unwrapping WMON: {error}")
+        print(Fore.RED + f"xxx Error unwrapping WMON: {error}")
 
 def runSwapCycle(cycles=1, interval=None):
     for i in range(cycles):
@@ -100,9 +100,9 @@ def runSwapCycle(cycles=1, interval=None):
         randomDelay = getRandomDelay()
         wrapMON(randomAmount)
         unwrapMON(randomAmount)
-        print(Fore.WHITE + f"⏳ Wait {randomDelay / 1000 / 60} Minute")
+        print(Fore.WHITE + f"... Wait {randomDelay / 1000 / 60} Minute")
         time.sleep(randomDelay / 1000)
 
 if __name__ == '__main__':
-    print(Fore.BLUE + "🪫  Starting Rubic ⏩⏩⏩⏩")
+    print(Fore.BLUE + ">>> Starting Rubic >>>>")
     runSwapCycle()

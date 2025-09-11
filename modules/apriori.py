@@ -20,7 +20,7 @@ EXPLORER_URL = "https://testnet.monadexplorer.com/tx/"
 w3 = Web3(Web3.HTTPProvider(RPC_URL))
 PRIVATE_KEY = os.getenv("PRIVATE_KEY")
 if not PRIVATE_KEY:
-    print(Fore.RED + "❌ PRIVATE_KEY tidak ditemukan di .env")
+    print(Fore.RED + "xxx PRIVATE_KEY tidak ditemukan di .env")
     sys.exit(1)
 
 account = Account.from_key(PRIVATE_KEY)
@@ -79,7 +79,7 @@ def wait_for_receipt(tx_hash):
 def stake_mon():
     try:
         stake_amount = get_random_amount()
-        print(Fore.GREEN + f"🔄 Stake: {Web3.from_wei(stake_amount, 'ether')} MON")
+        print(Fore.GREEN + f">>> Stake: {Web3.from_wei(stake_amount, 'ether')} MON")
         data = "0x6e553f65" + hex_zero_pad(stake_amount, 32)[2:] + hex_zero_pad_address(account.address, 32)[2:]
         tx = {
             'to': contract_address,
@@ -88,16 +88,16 @@ def stake_mon():
             'data': data
         }
         tx_hash = send_transaction(tx)
-        print(Fore.YELLOW + f"➡️  Hash: {tx_hash.hex()}")
+        print(Fore.YELLOW + f">>> Hash: {tx_hash.hex()}")
         return wait_for_receipt(tx_hash), stake_amount
     except Exception as e:
-        print(Fore.RED + f"❌ Staking failed: {str(e)}")
+        print(Fore.RED + f"xxx Staking failed: {str(e)}")
         raise
 
 
 def request_unstake(amount_to_unstake):
     try:
-        print(Fore.GREEN + f"🔄 Unstake: {Web3.from_wei(amount_to_unstake, 'ether')} aprMON")
+        print(Fore.GREEN + f">>> Unstake: {Web3.from_wei(amount_to_unstake, 'ether')} aprMON")
         data = ("0x7d41c86e" +
                 hex_zero_pad(amount_to_unstake, 32)[2:] +
                 hex_zero_pad_address(account.address, 32)[2:] +
@@ -109,10 +109,10 @@ def request_unstake(amount_to_unstake):
             'data': data
         }
         tx_hash = send_transaction(tx)
-        print(Fore.YELLOW + f"➡️  Hash: {tx_hash.hex()}")
+        print(Fore.YELLOW + f">>> Hash: {tx_hash.hex()}")
         return wait_for_receipt(tx_hash)
     except Exception as e:
-        print(Fore.RED + f"❌ Unstake failed: {str(e)}")
+        print(Fore.RED + f"xxx Unstake failed: {str(e)}")
         raise
 
 
@@ -121,14 +121,14 @@ def run_cycle():
         receipt, stake_amount = stake_mon()
         delay(get_random_delay())
         request_unstake(stake_amount)
-        print(Fore.GREEN + "✅ Cycle complete")
+        print(Fore.GREEN + "+++ Cycle complete")
     except Exception as e:
-        print(Fore.RED + f"❌ Error in cycle: {str(e)}")
+        print(Fore.RED + f"xxx Error in cycle: {str(e)}")
 
 
 def main():
     display_header()
-    print(Fore.BLUE + "\n🪫  Starting Apriori ⏩⏩⏩⏩\n")
+    print(Fore.BLUE + "\n>>> Starting Apriori >>>>\n")
     for i in range(1):
         run_cycle()
         delay(get_random_delay())

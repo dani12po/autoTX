@@ -56,15 +56,15 @@ def transferTokens(wallet, index):
     signed_tx = wallet.sign_transaction(tx)
     tx_hash = w3.eth.send_raw_transaction(signed_tx.raw_transaction)
     shortAddress = newWallet["address"][-5:]
-    print(Fore.GREEN + f"✅ ({index + 1}/50) [confirm] : {randomAmount_str} {network['symbol']} sent to {shortAddress} : {tx_hash.hex()}")
+    print(Fore.GREEN + f"+++ ({index + 1}/50) [confirm] : {randomAmount_str} {network['symbol']} sent to {shortAddress} : {tx_hash.hex()}")
 
 def handleTokenTransfers():
     wallet = w3.eth.account.from_key(PRIVATE_KEY)
-    print(Fore.BLUE + "🪫  Starting AutoSend ⏩⏩⏩⏩")
+    print(Fore.BLUE + ">>> Starting AutoSend >>>>")
     print(" ")
     for i in range(50):
         transferTokens(wallet, i)
-    print(Fore.GREEN + "⏩ \nAll transactions completed successfully!")
+    print(Fore.GREEN + ">>> \nAll transactions completed successfully!")
 
 if __name__ == '__main__':
     try:

@@ -55,8 +55,8 @@ def get_random_delay():
 
 def wrap_mon(amount):
     try:
-        print(Fore.BLUE + "🪫 Starting Bebop ⏩⏩⏩⏩")
-        print(Fore.MAGENTA + f"🔄 Wrapping {w3.from_wei(amount, 'ether')} MON to WMON")
+        print(Fore.BLUE + ">>> Starting Bebop >>>>")
+        print(Fore.MAGENTA + f">>> Wrapping {w3.from_wei(amount, 'ether')} MON to WMON")
         nonce = w3.eth.get_transaction_count(account.address)
         tx = contract.functions.deposit().build_transaction({
             'from': account.address,
@@ -67,16 +67,16 @@ def wrap_mon(amount):
         })
         signed_tx = account.sign_transaction(tx)
         tx_hash = w3.eth.send_raw_transaction(signed_tx.raw_transaction)
-        print(Fore.GREEN + "✅ Successfully wrapped MON to WMON")
-        print(Fore.LIGHTBLACK_EX + f"➡️  Hash: {tx_hash.hex()}")
+        print(Fore.GREEN + "+++ Successfully wrapped MON to WMON")
+        print(Fore.LIGHTBLACK_EX + f">>> Hash: {tx_hash.hex()}")
         # Mengganti waitForTransactionReceipt dengan wait_for_transaction_receipt
         w3.eth.wait_for_transaction_receipt(tx_hash)
     except Exception as e:
-        print(Fore.RED + f"❌ Error while wrapping MON to WMON: {str(e)}")
+        print(Fore.RED + f"xxx Error while wrapping MON to WMON: {str(e)}")
 
 def unwrap_mon(amount):
     try:
-        print(Fore.MAGENTA + f"🔄 Unwrapping {w3.from_wei(amount, 'ether')} WMON to MON")
+        print(Fore.MAGENTA + f">>> Unwrapping {w3.from_wei(amount, 'ether')} WMON to MON")
         nonce = w3.eth.get_transaction_count(account.address)
         tx = contract.functions.withdraw(amount).build_transaction({
             'from': account.address,
@@ -86,12 +86,12 @@ def unwrap_mon(amount):
         })
         signed_tx = account.sign_transaction(tx)
         tx_hash = w3.eth.send_raw_transaction(signed_tx.raw_transaction)
-        print(Fore.GREEN + "✅ Successfully unwrapped WMON to MON")
-        print(Fore.LIGHTBLACK_EX + f"➡️  Hash: {tx_hash.hex()}")
+        print(Fore.GREEN + "+++ Successfully unwrapped WMON to MON")
+        print(Fore.LIGHTBLACK_EX + f">>> Hash: {tx_hash.hex()}")
         # Mengganti waitForTransactionReceipt dengan wait_for_transaction_receipt
         w3.eth.wait_for_transaction_receipt(tx_hash)
     except Exception as e:
-        print(Fore.RED + f"❌ Error while unwrapping WMON to MON: {str(e)}")
+        print(Fore.RED + f"xxx Error while unwrapping WMON to MON: {str(e)}")
 
 def run_swap_cycle(cycles=1):
     try:
@@ -102,14 +102,14 @@ def run_swap_cycle(cycles=1):
             unwrap_mon(random_amount)
             if i < cycles - 1:
                 wait_minutes = random_delay / 1000 / 60
-                print(Fore.LIGHTBLACK_EX + f"⏳ Waiting for {wait_minutes} minutes")
+                print(Fore.LIGHTBLACK_EX + f"... Waiting for {wait_minutes} minutes")
                 time.sleep(random_delay / 1000)
-        print(Fore.GREEN + "✅ Finished")
+        print(Fore.GREEN + "+++ Finished")
     except Exception as e:
-        print(Fore.RED + f"❌ Error during swap cycle: {str(e)}")
+        print(Fore.RED + f"xxx Error during swap cycle: {str(e)}")
 
 if __name__ == '__main__':
     try:
         run_swap_cycle(1)
     except Exception as e:
-        print(Fore.RED + f"❌ Error in runSwapCycle: {str(e)}")
+        print(Fore.RED + f"xxx Error in runSwapCycle: {str(e)}")
