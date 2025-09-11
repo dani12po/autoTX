@@ -5,19 +5,29 @@ import asyncio
 import subprocess
 from asyncio.subprocess import PIPE
 
-# Set TMPDIR for Termux compatibility
-os.environ['TMPDIR'] = '/data/data/com.termux/files/usr/tmp'
+# Platform detection and configuration
+IS_TERMUX = 'ANDROID_DATA' in os.environ
+IS_WINDOWS = os.name == 'nt'
+IS_LINUX = os.name == 'posix' and not IS_TERMUX
 
-# Ensure paths work in Termux
-HOME = os.getenv('HOME', '/data/data/com.termux/files/home')
+# Set platform-specific configurations
+if IS_TERMUX:
+    os.environ['TMPDIR'] = '/data/data/com.termux/files/usr/tmp'
+    HOME = os.getenv('HOME', '/data/data/com.termux/files/home')
+    asyncio.set_event_loop_policy(asyncio.DefaultEventLoopPolicy())
+else:
+    HOME = os.path.expanduser('~')
+
+# Ensure cross-platform path handling
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
+MODULE_DIR = os.path.join(SCRIPT_DIR, 'modules')
 
 # Make sure we can find the modules directory
 sys.path.append(SCRIPT_DIR)
 
-# Disable functionalities that might cause issues in Termux
-if 'ANDROID_DATA' in os.environ:
-    asyncio.set_event_loop_policy(asyncio.DefaultEventLoopPolicy())
+# Platform-specific color support
+if IS_WINDOWS:
+    os.system('color')  # Enable Windows console colors
 
 # Optional third-party module 'danixyz' — use if available, otherwise provide a no-op.
 try:
@@ -98,37 +108,53 @@ for filename in module_files:
 
 async def run_script(script):
     print(Fore.YELLOW + f"\n=== Menjalankan: {script['name']}...")
-    cmd = [sys.executable, script["path"]]
+    
+    # Use platform-specific python executable
+    if IS_WINDOWS:
+        python_exe = sys.executable
+    elif IS_TERMUX:
+        python_exe = '/data/data/com.termux/files/usr/bin/python'
+    else:  # Linux/Unix
+        python_exe = sys.executable or 'python3'
+    
+    cmd = [python_exe, script["path"]]
 
     try:
-        # Use regular subprocess for Termux compatibility
-        if 'ANDROID_DATA' in os.environ:
+        # Use appropriate subprocess method based on platform
+        if IS_TERMUX:
+            # Simple subprocess for Termux
             process = subprocess.Popen(
                 cmd,
                 stdout=subprocess.PIPE,
                 stderr=subprocess.PIPE,
-                text=True
+                text=True,
+                env=os.environ.copy()  # Pass current environment
             )
             stdout, stderr = process.communicate()
             return_code = process.returncode
         else:
-            # Use asyncio for non-Termux environments
-            spinner = Halo(text='Sedang mengeksekusi...', spinner='dots', color='cyan')
-            spinner.start()
+            # Use asyncio with spinner for other platforms
+            if not IS_WINDOWS:  # No spinner on Windows
+                spinner = Halo(text='Sedang mengeksekusi...', spinner='dots', color='cyan')
+                spinner.start()
+            
             proc = await asyncio.create_subprocess_exec(
                 *cmd,
                 stdout=PIPE,
-                stderr=PIPE
+                stderr=PIPE,
+                env=os.environ.copy()  # Pass current environment
             )
             stdout, stderr = await proc.communicate()
             return_code = proc.returncode
-            spinner.stop()
+            
+            if not IS_WINDOWS:
+                spinner.stop()
 
-        # Convert bytes to string if needed
+        # Handle output encoding based on platform
         if isinstance(stdout, bytes):
-            stdout = stdout.decode()
+            stdout = stdout.decode(encoding='utf-8', errors='replace')
         if isinstance(stderr, bytes):
-            stderr = stderr.decode()
+            stderr = stderr.decode(encoding='utf-8', errors='replace')
 
     except Exception as e:
         print(Fore.RED + f"Error running script: {str(e)}")
