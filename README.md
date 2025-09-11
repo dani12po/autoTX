@@ -1,78 +1,157 @@
 # MONAD AUTO TX BOT
 
-# JOIN COMMUNITY :
+## JOIN COMMUNITY
 
-TELEGRAM CHANNEL : [DANI XYZ](https://t.me/YaapGitHUB)
+[Telegram Channel: DANI XYZ](https://t.me/YaapGitHUB)
 
-## TUTORIAL :
+---
 
-1. Before running this boat. You are required to connect your wallet that will be botted to the website below :
+## ⚠️ PENTING: KEAMANAN PRIVATE KEY
 
-https://stake.apr.io/
+Bot ini menggunakan **Private Key wallet** Anda.
+**\[!] Jangan pernah membagikan key ini ke orang lain.**
+Simpan di file `.env` yang aman.
 
-https://swap.bean.exchange/
+---
 
-https://bebop.xyz/trade
+## 🌐 Situs Referensi Wallet / Trading
 
-https://alpha.izumi.finance/trade/swap
+Sebelum menjalankan bot, pastikan wallet Anda siap:
 
-https://kintsu.xyz/staking
+* [APR Stake](https://stake.apr.io/)
+* [Bean Swap](https://swap.bean.exchange/)
+* [Bebop Trade](https://bebop.xyz/trade)
+* [Alpha Izumi Swap](https://alpha.izumi.finance/trade/swap)
+* [Kintsu Staking](https://kintsu.xyz/staking)
+* [Magma Staking](https://www.magmastaking.xyz/)
+* [Monorail](https://monorail.xyz/)
+* [Testnet Rubic Exchange](https://testnet.rubic.exchange/)
 
-https://www.magmastaking.xyz/
+---
 
-https://monorail.xyz/
+## ✅ PRASYARAT
 
-https://testnet.rubic.exchange/
+* Python 3.10+
+* Git
+* Akses internet & RPC Node blockchain
 
-2. Install Git :
-```
+---
+
+## 📦 DAFTAR DEPENDENCIES
+
+| Package         | Fungsi                                  |
+| --------------- | --------------------------------------- |
+| `web3`          | Koneksi blockchain & transaksi Ethereum |
+| `python-dotenv` | Membaca file `.env` (PRIVATE\_KEY, RPC) |
+| `colorama`      | Warna dan formatting di console         |
+
+> Semua dependency dapat diinstall via `pip`.
+
+---
+
+## 🚀 TUTORIAL INSTALASI LENGKAP
+
+### 1️⃣ Install Git
+
+**Linux:**
+
+```bash
+sudo apt update
 sudo apt install git -y
 ```
-3. Install python3 :
-```
+
+**Windows:**
+Download dan install Git dari [git-scm.com](https://git-scm.com/).
+
+---
+
+### 2️⃣ Install Python 3 dan pip
+
+**Linux:**
+
+```bash
 sudo apt install python3 -y
-```
-4. Install python3-pip :
-```
 sudo apt install python3-pip -y
-```
-5. Install python3-venv :
-```
 sudo apt install python3-venv -y
 ```
-6. Git clone Bot & Go to folder bot:
-```
+
+**Windows:**
+Download Python 3 dari [python.org](https://www.python.org/downloads/) dan centang opsi **Add Python to PATH** saat install.
+
+---
+
+### 3️⃣ Clone Repository
+
+```bash
 git clone https://github.com/dani12po/autoTX.git
 cd autoTX
 ```
-7. Go to folder bot & Edit file `.env` paste your Private Key after `PRIVATE_KEY=`
+
+---
+
+### 4️⃣ Buat File `.env`
+
+Buat file `.env` di folder `autoTX` dan tambahkan Private Key Anda:
+
 ```
-nano .env
+PRIVATE_KEY=0xYourPrivateKeyHere
 ```
-8. Install Venv & module :
-```
+
+> \[!] Jangan commit `.env` ke GitHub atau bagikan ke orang lain.
+
+---
+
+### 5️⃣ Buat Virtual Environment & Install Dependencies
+
+**Linux / Mac:**
+
+```bash
 python3 -m venv venv
-
-. venv/bin/activate
-
-pip install -r requirements.txt
+source venv/bin/activate
+pip install web3 python-dotenv colorama
 ```
-9. Run Bot :
+
+**Windows:**
+
+```cmd
+python -m venv venv
+venv\Scripts\activate
+pip install web3 python-dotenv colorama
 ```
+
+> Virtual environment mencegah konflik paket Python dengan sistem global.
+
+---
+
+### 6️⃣ Jalankan Bot
+
+**Linux / Mac:**
+
+```bash
 python3 bot.py
 ```
-10. Done. Don't Forget to subscribe my channel Telegram
 
+**Windows:**
 
+```cmd
+python bot.py
+```
 
+Bot akan mulai otomatis melakukan transaksi sesuai konfigurasi.
 
+---
 
+## 📝 CATATAN PENGGUNAAN
 
+* Pastikan saldo wallet mencukupi.
+* Gunakan RPC yang stabil agar transaksi tidak gagal.
+* Delay acak dan jumlah transaksi dapat diatur di skrip untuk keamanan.
+* Gunakan console yang mendukung UTF-8 agar warna muncul dengan benar.
+* Pantau log bot untuk memastikan transaksi berjalan lancar.
 
+---
 
+## 🔧 SUPPORT
 
-
-
-
-
-
+Jika mengalami error atau butuh bantuan:
+Gabung ke [Telegram Channel DANI XYZ](https://t.me/YaapGitHUB)
